@@ -17,15 +17,15 @@ def get_n():
 		# 'state': '', # eg, CA or NY
 		# 'zip': '',
 		'country': 'all', # could be US or CA
-		'limit': 10 # up to 200, or all
+		'limit': '10' # up to 200, or all
 	}
 
 	desired_fields = [
-				# 'station_name',
+				'station_name',
 				'open_date',
 				'id',
 				'date_last_confirmed',
-				# 'expected_date',
+				'expected_date',
 				'status_code',
 				'updated_at',
 				'facility_type',
@@ -39,11 +39,12 @@ def get_n():
 
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
 	print(response['total_results'])
+	print('\t'.join([field for field in desired_fields]))
 	for station in response['fuel_stations']:
-		print(station['station_name'])
-		for field in desired_fields:
-			print(f'\t{field}: {station[field]}')
-		print()
+		print('\t'.join([str(station[field]) for field in desired_fields]))
+		# for field in desired_fields:
+			# print(f'\t{field}: {station[field]}')
+		# print()
 
 if __name__ == '__main__':
 	get_n()

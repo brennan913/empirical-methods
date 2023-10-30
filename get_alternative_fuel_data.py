@@ -47,7 +47,7 @@ def get_fuel_data():
 			# print(f'\t{field}: {station[field]}')
 		# print()
 
-def get_policy_data():
+def get_battery_policy_data():
 
 	host = 'https://developer.nrel.gov'
 	base_url = '/api/battery-policies'
@@ -85,5 +85,40 @@ def get_policy_data():
 	for policy in response['result']:
 		print('\t'.join([re.sub(r'\r\n', r'\\n', str(policy[field])) for field in desired_fields]))
 
+
+def get_transportation_policy_data():
+
+	host = 'https://developer.nrel.gov'
+	base_url = '/api/transportation-incentives-laws'
+	format = 'json'
+	endpoint = base_url + f'/v1.{format}'
+
+	params = {
+		'api_key': '3WqvBCf2Tc6AhOTaK38fKoUNyz3POjS6R6NwHb7S',
+		'limit': all,
+		'technology': 'ELEC'
+	}
+
+	desired_fields = [
+		'id',
+		'title',
+		'state',
+		'agency',
+		'type',
+		'types',
+		'categories',
+		'status',
+		'status_date',
+		'enacted_date',
+		'amended_date',
+		'significant_update_date',
+		'text'
+	]
+	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
+	print(response['metadata']['count'])
+	print('\t'.join([field for field in desired_fields]))
+	for policy in response['result']:
+		print('\t'.join([re.sub(r'\r\n', r'\\n', str(policy[field])) for field in desired_fields]))
+
 if __name__ == '__main__':
-	get_policy_data()
+	get_transportation_policy_data()

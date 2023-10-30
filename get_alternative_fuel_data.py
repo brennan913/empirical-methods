@@ -1,5 +1,6 @@
 import requests
 import json
+import re
 
 def get_fuel_data():
 	host = 'https://developer.nrel.gov'
@@ -55,33 +56,34 @@ def get_policy_data():
 
 	params = {
 		'api_key': '3WqvBCf2Tc6AhOTaK38fKoUNyz3POjS6R6NwHb7S',
-		'limit': 10,
+		'limit': 100,
 		'topic': 'EVS'
 	}
 
 	desired_fields = [
+		'id',
 		'jurisdiction_type',
-		'jurisdiction',
-		'state',
-		'agency',
-		'date_enacted'
+		'record_type',
+		'states',
+		'agencies',
+		'date_enacted',
 		'record_type',
 		'title',
 		'status',
 		'status_date',
-		'description',
 		'date_enacted',
 		'date_amended',
 		'date_expired',
 		'date_archived',
 		'date_repealed',
-		'significant_update'
+		'significant_update',
+		'description',
 	]
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
-	print(response['total_results'])
-	print('~'.join([field for field in desired_fields]))
-	for policy in response['policies']:
-		print('~'.join([str(policy[field]) for field in desired_fields]))
+	print(response['metadata']['resultset']['count'])
+	print('\t'.join([field for field in desired_fields]))
+	for policy in response['result']:
+		print('\t'.join([re.sub(r'\r\n', r'\\n', str(policy[field])) for field in desired_fields]))
 
 if __name__ == '__main__':
 	get_policy_data()

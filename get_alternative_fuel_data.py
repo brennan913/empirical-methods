@@ -1,7 +1,7 @@
 import requests
 import json
 
-def get_n():
+def get_fuel_data():
 	host = 'https://developer.nrel.gov'
 	endpoint = '/api/alt-fuel-stations/v1'
 
@@ -17,7 +17,7 @@ def get_n():
 		# 'state': '', # eg, CA or NY
 		# 'zip': '',
 		'country': 'all', # could be US or CA
-		'limit': '10' # up to 200, or all
+		'limit': 'all' # up to 200, or all
 	}
 
 	desired_fields = [
@@ -38,13 +38,50 @@ def get_n():
 	]
 
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
-	print(response['total_results'])
-	print('\t'.join([field for field in desired_fields]))
+	# print(response['total_results'])
+	print('~'.join([field for field in desired_fields]))
 	for station in response['fuel_stations']:
-		print('\t'.join([str(station[field]) for field in desired_fields]))
+		print('~'.join([str(station[field]) for field in desired_fields]))
 		# for field in desired_fields:
 			# print(f'\t{field}: {station[field]}')
 		# print()
 
+def get_policy_data():
+
+	host = 'https://developer.nrel.gov'
+	base_url = '/api/battery-policies'
+	format = 'json'
+	endpoint = base_url + f'/v1/policies.{format}'
+
+	params = {
+		'api_key': '3WqvBCf2Tc6AhOTaK38fKoUNyz3POjS6R6NwHb7S',
+		'limit': 10,
+		'topic': 'EVS'
+	}
+
+	desired_fields = [
+		'jurisdiction_type',
+		'jurisdiction',
+		'state',
+		'agency',
+		'date_enacted'
+		'record_type',
+		'title',
+		'status',
+		'status_date',
+		'description',
+		'date_enacted',
+		'date_amended',
+		'date_expired',
+		'date_archived',
+		'date_repealed',
+		'significant_update'
+	]
+	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
+	print(response['total_results'])
+	print('~'.join([field for field in desired_fields]))
+	for policy in response['policies']:
+		print('~'.join([str(policy[field]) for field in desired_fields]))
+
 if __name__ == '__main__':
-	get_n()
+	get_policy_data()

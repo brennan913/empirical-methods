@@ -118,7 +118,15 @@ def get_transportation_policy_data():
 	print(response['metadata']['count'])
 	print('\t'.join([field for field in desired_fields]))
 	for policy in response['result']:
-		print('\t'.join([re.sub(r'\r\n', r'\\n', str(policy[field])) for field in desired_fields]))
+		line = '\t'.join([
+				re.sub(
+					r'\r\n',
+					r'\\n',
+					str(policy[field])
+				) for field in desired_fields
+		])
+		line = re.sub('\n', '', line)
+		print(line)
 
 if __name__ == '__main__':
 	get_transportation_policy_data()

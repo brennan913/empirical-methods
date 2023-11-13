@@ -32,6 +32,8 @@ def get_fuel_data():
 				'updated_at',
 				'facility_type',
 				'city',
+				'state',
+				'zip',
 				'street_address',
 				'country',
 				# 'ev_charging_level',
@@ -134,5 +136,8 @@ def get_transportation_policy_data():
 		print(line)
 
 if __name__ == '__main__':
-	# get_fuel_data()
-	get_transportation_policy_data()
+
+	if len(sys.argv) != 2 or sys.argv[1] == 'stations':
+		get_fuel_data()
+	elif sys.argv[1] == 'policies':
+		get_transportation_policy_data()

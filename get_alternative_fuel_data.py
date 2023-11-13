@@ -1,5 +1,6 @@
 import requests
 import json
+import sys
 import re
 
 def get_fuel_data():
@@ -39,7 +40,7 @@ def get_fuel_data():
 	]
 
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
-	# print(response['total_results'])
+	print(response['total_results'], file=sys.stderr)
 	print('\t'.join([field for field in desired_fields]))
 	for station in response['fuel_stations']:
 		print('\t'.join([
@@ -84,7 +85,7 @@ def get_battery_policy_data():
 		'description',
 	]
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
-	print(response['metadata']['resultset']['count'])
+	print(response['metadata']['resultset']['count'], file=sys.stderr)
 	print('\t'.join([field for field in desired_fields]))
 	for policy in response['result']:
 		print('\t'.join([re.sub(r'\r\n', r'\\n', str(policy[field])) for field in desired_fields]))
@@ -119,7 +120,7 @@ def get_transportation_policy_data():
 		'text'
 	]
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
-	print(response['metadata']['count'])
+	print(response['metadata']['count'], file=sys.stderr)
 	print('\t'.join([field for field in desired_fields]))
 	for policy in response['result']:
 		line = '\t'.join([
@@ -133,5 +134,5 @@ def get_transportation_policy_data():
 		print(line)
 
 if __name__ == '__main__':
-	get_fuel_data()
-	# get_transportation_policy_data()
+	# get_fuel_data()
+	get_transportation_policy_data()

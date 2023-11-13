@@ -40,12 +40,16 @@ def get_fuel_data():
 
 	response = json.loads(requests.get(f'{host}{endpoint}', params).content)
 	# print(response['total_results'])
-	print('~'.join([field for field in desired_fields]))
+	print('\t'.join([field for field in desired_fields]))
 	for station in response['fuel_stations']:
-		print('~'.join([str(station[field]) for field in desired_fields]))
-		# for field in desired_fields:
-			# print(f'\t{field}: {station[field]}')
-		# print()
+		print('\t'.join([
+			re.sub(
+				'\t',
+				r'\\t',
+				str(station[field])
+			)
+			for field in desired_fields])
+		)
 
 def get_battery_policy_data():
 
@@ -129,4 +133,5 @@ def get_transportation_policy_data():
 		print(line)
 
 if __name__ == '__main__':
-	get_transportation_policy_data()
+	get_fuel_data()
+	# get_transportation_policy_data()

@@ -92,6 +92,12 @@ def get_battery_policy_data():
 	for policy in response['result']:
 		print('\t'.join([re.sub(r'\r\n', r'\\n', str(policy[field])) for field in desired_fields]))
 
+def parse_field(field):
+	if type(field) == list:
+		return json.dumps(field)
+	if type(field) == str:
+		return re.sub(r'\r\n', r'\\n', field)
+	return str(field)
 
 def get_transportation_policy_data():
 
@@ -103,6 +109,7 @@ def get_transportation_policy_data():
 	params = {
 		'api_key': '3WqvBCf2Tc6AhOTaK38fKoUNyz3POjS6R6NwHb7S',
 		'limit': all,
+		# 'limit': 10,
 		'technology': 'ELEC'
 	}
 
@@ -126,11 +133,8 @@ def get_transportation_policy_data():
 	print('\t'.join([field for field in desired_fields]))
 	for policy in response['result']:
 		line = '\t'.join([
-				re.sub(
-					r'\r\n',
-					r'\\n',
-					str(policy[field])
-				) for field in desired_fields
+			parse_field(policy[field])
+			for field in desired_fields
 		])
 		line = re.sub('\n', '', line)
 		print(line)
